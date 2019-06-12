@@ -33,6 +33,10 @@ for subdir, dirs, files in os.walk(loc):
           path = "%s\%s" %(dest,orig.date())
           if not os.path.exists(path):
             os.mkdir(path)
+        else:
+            path=dest+'\\fucked'
+            if not os.path.exists(path):
+                os.mkdir(path)
 
         for t in l:
             if t in tags.keys():
@@ -41,13 +45,18 @@ for subdir, dirs, files in os.walk(loc):
                 vals[t] = str(0)
             name = name + vals[t]
                
-        n = hashlib.sha224(name.encode('utf-8')).hexdigest()
+        n = hashlib.md5(name.encode('utf-8')).hexdigest()
         new = path+'\\'+n+ext
 
-        print("Old %s" %filepath)
-        print("New %s" %new)
 
         if not os.path.isfile(new):
+            try:
+                copyfile(filepath, new)
+            except:
+                print("WTF")
+                print("Old %s" %filepath)
+                print("New %s" %new)
+                print(im)
 
 
  
