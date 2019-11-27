@@ -20,17 +20,22 @@ for subdir, dirs, files in os.walk(loc):
         fn, ext = os.path.splitext(file)
         try:
             im = Image.open(filepath)
-        except:
+        except Exception as e:
+            print(e)
             continue
         tags = {}
         with open(filepath, 'rb') as f:
-            tags = exifread.process_file(f, details=False)
+            try:
+               tags = exifread.process_file(f, details=False)
+            except:
+                print("WTF:: %s" %filepath)
         vals = {}
         name = path = ""
         if "EXIF DateTimeOriginal" in tags.keys():
           thething = str(tags['EXIF DateTimeOriginal'])
           orig = datetime.datetime.strptime(thething, '%Y:%m:%d %H:%M:%S')
-          path = "%s\%s" %(dest,orig.date())
+          ym = "%s-%s" %(orig.year,orig.month)
+          path = "%s\%s" %(dest,ym)
           if not os.path.exists(path):
             os.mkdir(path)
         else:
